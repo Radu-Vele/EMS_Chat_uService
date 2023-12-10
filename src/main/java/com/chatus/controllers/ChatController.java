@@ -28,10 +28,6 @@ public class ChatController {
         );
     }
 
-    @PostMapping("/findMeAnAdmin")
-    private ResponseEntity<String> pairUserWithAdmin() {
-        return ResponseEntity.ok(this.chatService.findAdminForClient());
-    }
     @GetMapping("/getActiveSessions")
     private ResponseEntity<List<String>> getAllActiveConnections() {
         return ResponseEntity.ok(this.chatService.getAllActiveConnections());

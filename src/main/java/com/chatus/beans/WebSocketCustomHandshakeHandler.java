@@ -1,10 +1,8 @@
 package com.chatus.beans;
 
+import com.chatus.data.User;
+import com.chatus.data.UserRole;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.stereotype.Component;
@@ -21,8 +19,11 @@ public class WebSocketCustomHandshakeHandler extends DefaultHandshakeHandler {
         ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
         HttpServletRequest httpServletRequest = servletRequest.getServletRequest();
         String name = httpServletRequest.getParameter("name");
-        System.out.println("Received request ".concat(name));
-
-        return new User(name);
+        String role = httpServletRequest.getParameter("role");
+        System.out.println("Received request ".concat(name).concat(" ").concat(role));
+        if (role.equalsIgnoreCase("ADMIN")) {
+            return new User(name, UserRole.ADMIN);
+        }
+        return new User(name, UserRole.USER);
     }
 }
