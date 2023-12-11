@@ -1,6 +1,7 @@
 package com.chatus.controllers;
 
 import com.chatus.dtos.MessageDto;
+import com.chatus.dtos.SeenNotificationDto;
 import com.chatus.exceptions.NoAdminOnlineException;
 import com.chatus.services.ChatService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,6 +27,11 @@ public class ChatController {
     @MessageMapping("/chat")
     public void processMessage(@Payload MessageDto messageDto) throws JsonProcessingException {
         this.chatService.processChatMessage(messageDto);
+    }
+
+    @MessageMapping("/seen")
+    public void sendSeenNotification(@Payload SeenNotificationDto seenNotificationDto) throws JsonProcessingException {
+        this.chatService.sendSeenNotification(seenNotificationDto);
     }
 
     @GetMapping("/getActiveSessions")

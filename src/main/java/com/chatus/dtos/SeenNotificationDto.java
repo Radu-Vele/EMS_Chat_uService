@@ -1,5 +1,6 @@
 package com.chatus.dtos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,9 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
-public class MessageDto {
-    String senderEmailAddress;
-    String receiverEmailAddress;
-    String messageBody;
-    Long timestamp;
+public class SeenNotificationDto {
+    @JsonProperty("messageTimestamp")
+    Long messageTimestamp;
 }

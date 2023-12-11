@@ -3,6 +3,7 @@ package com.chatus.services;
 import com.chatus.data.User;
 import com.chatus.data.UserRole;
 import com.chatus.dtos.MessageDto;
+import com.chatus.dtos.SeenNotificationDto;
 import com.chatus.exceptions.NoAdminOnlineException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -61,6 +62,13 @@ public class ChatService {
                 messageDto.getReceiverEmailAddress(),
                 "/messages",
                 objectMapper.writeValueAsString(messageDto)
+        );
+    }
+
+    public void sendSeenNotification(SeenNotificationDto seenNotificationDto) throws JsonProcessingException {
+        simpMessagingTemplate.convertAndSend(
+                "/seen/".concat(String.valueOf(seenNotificationDto.getMessageTimestamp())),
+                objectMapper.writeValueAsString(seenNotificationDto)
         );
     }
 }
