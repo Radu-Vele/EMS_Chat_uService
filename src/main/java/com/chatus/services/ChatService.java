@@ -2,7 +2,10 @@ package com.chatus.services;
 
 import com.chatus.data.User;
 import com.chatus.data.UserRole;
+import com.chatus.dtos.MessageDto;
 import com.chatus.exceptions.NoAdminOnlineException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.websocket.Session;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -21,6 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ChatService {
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final SimpUserRegistry simpUserRegistry;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public List<String> getAllActiveConnections() {
         System.out.println(this.simpUserRegistry.getUserCount());
@@ -50,5 +54,13 @@ public class ChatService {
             throw new NoAdminOnlineException();
         }
         return adminList.get(random.nextInt(adminList.size()));
+    }
+
+    public void processChatMessage(MessageDto messageDto) throws JsonProcessingException {
+        simpMessagingTemplate.convertAndSendToUser(
+                messageDto.getReceiverEmailAddress(),
+                "/messages",
+                objectMapper.writeValueAsString(messageDto)
+        );
     }
 }

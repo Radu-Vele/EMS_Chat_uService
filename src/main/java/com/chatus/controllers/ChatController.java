@@ -3,6 +3,7 @@ package com.chatus.controllers;
 import com.chatus.dtos.MessageDto;
 import com.chatus.exceptions.NoAdminOnlineException;
 import com.chatus.services.ChatService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -17,14 +18,14 @@ import java.util.List;
 @CrossOrigin
 public class ChatController {
     private final ChatService chatService;
-    private final SimpMessagingTemplate messagingTemplate;
+
+    /**
+     * Called when a user wants to send a message to another user
+     * @param messageDto
+     */
     @MessageMapping("/chat")
-    public void processMessage(@Payload MessageDto messageDto) {
-        messagingTemplate.convertAndSendToUser(
-                messageDto.getReceiverEmailAddress(),
-                "/queue/messages",
-                messageDto.getMessageBody()
-        );
+    public void processMessage(@Payload MessageDto messageDto) throws JsonProcessingException {
+        this.chatService.processChatMessage(messageDto);
     }
 
     @GetMapping("/getActiveSessions")
