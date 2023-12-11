@@ -2,6 +2,7 @@ package com.chatus.controllers;
 
 import com.chatus.dtos.MessageDto;
 import com.chatus.dtos.SeenNotificationDto;
+import com.chatus.dtos.TypingNotificationDto;
 import com.chatus.exceptions.NoAdminOnlineException;
 import com.chatus.services.ChatService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -32,6 +33,16 @@ public class ChatController {
     @MessageMapping("/seen")
     public void sendSeenNotification(@Payload SeenNotificationDto seenNotificationDto) throws JsonProcessingException {
         this.chatService.sendSeenNotification(seenNotificationDto);
+    }
+
+    @MessageMapping("/startTyping")
+    public void sendStartTypingNotification(@Payload TypingNotificationDto typingNotificationDto) throws JsonProcessingException {
+        this.chatService.sendStartTypingNotification(typingNotificationDto);
+    }
+
+    @MessageMapping("/stopTyping")
+    public void sendStopTypingNotification(@Payload TypingNotificationDto typingNotificationDto) throws JsonProcessingException {
+        this.chatService.sendStopTypingNotification(typingNotificationDto);
     }
 
     @GetMapping("/getActiveSessions")

@@ -4,10 +4,10 @@ import com.chatus.data.User;
 import com.chatus.data.UserRole;
 import com.chatus.dtos.MessageDto;
 import com.chatus.dtos.SeenNotificationDto;
+import com.chatus.dtos.TypingNotificationDto;
 import com.chatus.exceptions.NoAdminOnlineException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.websocket.Session;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.user.SimpUser;
@@ -15,10 +15,8 @@ import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @RequiredArgsConstructor
@@ -69,6 +67,20 @@ public class ChatService {
         simpMessagingTemplate.convertAndSend(
                 "/seen/".concat(String.valueOf(seenNotificationDto.getMessageTimestamp())),
                 objectMapper.writeValueAsString(seenNotificationDto)
+        );
+    }
+
+    public void sendStopTypingNotification(TypingNotificationDto typingNotificationDto) throws JsonProcessingException {
+        simpMessagingTemplate.convertAndSend(
+                "/stopTyping/".concat(String.valueOf(typingNotificationDto.getSenderEmailAddress())),
+                objectMapper.writeValueAsString(typingNotificationDto)
+        );
+    }
+
+    public void sendStartTypingNotification(TypingNotificationDto typingNotificationDto) throws JsonProcessingException {
+        simpMessagingTemplate.convertAndSend(
+                "/startTyping/".concat(String.valueOf(typingNotificationDto.getSenderEmailAddress())),
+                objectMapper.writeValueAsString(typingNotificationDto)
         );
     }
 }
