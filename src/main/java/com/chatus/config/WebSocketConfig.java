@@ -32,7 +32,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.setApplicationDestinationPrefixes("/app");
-        registry.enableSimpleBroker("/queue", "/seen", "/startTyping",  "stopTyping");
+        registry.enableSimpleBroker("/queue", "/seen", "/startTyping",  "/stopTyping");
         registry.setUserDestinationPrefix("/queue");
     }
     //    @Override

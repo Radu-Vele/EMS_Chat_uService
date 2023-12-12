@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TypingNotificationDto {
     String senderEmailAddress;
+    String receiverEmailAddress;
 }
