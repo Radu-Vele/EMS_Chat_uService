@@ -8,7 +8,9 @@ public class SecurityConstants {
             "http://localhost:80",
             "http://localhost"
     };
-    public static final String[] NO_AUTH_REQUIRED_PATTERNS = {"/ws/**"}; // TODO: add security for web socket as well
+    public static final String[] NO_AUTH_REQUIRED_PATTERNS = {"/ws/**",
+        "/message/**"
+    }; // TODO: add security for web socket as well
 
     public static final String[] USER_AUTH_REQUIRED_PATTERNS = {"/findAdminAvailable"};
     public static final String[] ADMIN_AUTH_REQUIRED_PATTERNS = {"/getActiveSessions"};
