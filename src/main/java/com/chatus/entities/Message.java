@@ -21,5 +21,5 @@ public class Message {
     private Long timestamp;
     private Long deliveredTimestamp;
     private Long seenTimestamp;
-    // TODO: add boolean was-deleted (mark as deleted but still show something
+    // TODO: add boolean was-deleted (mark as deleted but still show something)
 }

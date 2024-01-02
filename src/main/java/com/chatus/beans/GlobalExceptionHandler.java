@@ -1,5 +1,6 @@
 package com.chatus.beans;
 
+import com.chatus.exceptions.ActionNotAllowedException;
 import com.chatus.exceptions.DocumentNotFoundException;
 import com.chatus.exceptions.NoAdminOnlineException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,5 +27,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(DocumentNotFoundException.class)
     public ResponseEntity<Object> handleDocumentNotFoundException(DocumentNotFoundException ex, WebRequest request) {
         return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler(ActionNotAllowedException.class)
+    public ResponseEntity<Object> handleActionNotAllowedException(ActionNotAllowedException ex, WebRequest request) {
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.FORBIDDEN, request);
     }
 }

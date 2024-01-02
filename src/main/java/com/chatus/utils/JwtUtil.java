@@ -37,6 +37,10 @@ public class JwtUtil {
         return getClaimFromToken(token, Claims::getSubject);
     }
 
+    public String getUsernameFromBearerTokenAuthHeader(String auth) {
+    return getUsernameFromToken(auth.substring(7));
+    }
+
     public UserRole getRoleFromToken(String token) {
         final Claims claims = getAllClaimsFromToken(token);
         String roleString = claims.get("role", String.class);

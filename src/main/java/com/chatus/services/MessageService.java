@@ -34,4 +34,28 @@ public class MessageService {
                 .deliveredTimestamp(message.getDeliveredTimestamp())
                 .build();
     }
+
+    public Message getMessageObjectById (String id) throws DocumentNotFoundException {
+        return this.messageRepository.findById(id)
+                .orElseThrow(DocumentNotFoundException::new);
+    }
+
+    public String edit(MessageCompleteDto messageEditDto) throws DocumentNotFoundException {
+        Message messagePrv = this.messageRepository
+                .findById(messageEditDto.getId())
+                .orElseThrow(DocumentNotFoundException::new);
+        // TODO: treat body edit case (mark message as edited)
+        // Modifiable values
+        if (messagePrv.getSeenTimestamp() == null) {
+            messagePrv.setSeenTimestamp(messageEditDto.getSeenTimestamp());
+        }
+        if (messagePrv.getDeliveredTimestamp() == null) {
+            messagePrv.setDeliveredTimestamp(messageEditDto.getDeliveredTimestamp());
+        }
+        return this.messageRepository.save(messagePrv).getId();
+    }
+
+    public void delete(String id) {
+        this.messageRepository.deleteById(id);
+    }
 }
