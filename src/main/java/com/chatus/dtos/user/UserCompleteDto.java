@@ -1,5 +1,6 @@
-package com.chatus.dtos;
+package com.chatus.dtos.user;
 
+import com.chatus.dtos.chat.ChatThumbnailDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

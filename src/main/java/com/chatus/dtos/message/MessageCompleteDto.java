@@ -1,4 +1,4 @@
-package com.chatus.dtos;
+package com.chatus.dtos.message;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

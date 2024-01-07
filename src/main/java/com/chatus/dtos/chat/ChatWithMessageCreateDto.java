@@ -1,4 +1,5 @@
-package com.chatus.dtos;
+package com.chatus.dtos.chat;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
-public class GroupMessageDto {
-    String groupId;
-    String messageId;
+public class ChatWithMessageCreateDto {
+    String receiverEmail;
+    String body;
+    Long timestamp;
 }

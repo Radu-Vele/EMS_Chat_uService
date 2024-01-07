@@ -1,12 +1,14 @@
 package com.chatus.controllers;
 
-import com.chatus.dtos.UserChatDto;
-import com.chatus.dtos.UserCompleteDto;
-import com.chatus.dtos.UserCreateDto;
+import com.chatus.dtos.chat.ChatWithMessageCreateDto;
+import com.chatus.dtos.user.UserChatDto;
+import com.chatus.dtos.user.UserCompleteDto;
+import com.chatus.dtos.user.UserCreateDto;
 import com.chatus.exceptions.DocumentNotFoundException;
 import com.chatus.services.UserService;
-import com.sun.net.httpserver.HttpsServer;
+import com.chatus.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestBody UserCreateDto userCreateDto) {
@@ -42,6 +45,13 @@ public class UserController {
     public ResponseEntity<?> addChatToUser(@RequestBody UserChatDto userChatDto) throws DocumentNotFoundException {
         this.userService.addChat(userChatDto);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/addNewChat")
+    public ResponseEntity<?> addNewChatToUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String auth,
+                                              @RequestBody ChatWithMessageCreateDto newChatDto) throws DocumentNotFoundException {
+        String requesterEmailAddress = this.jwtUtil.getUsernameFromBearerTokenAuthHeader(auth);
+        return new ResponseEntity<>(this.userService.addNewChat(newChatDto, requesterEmailAddress), HttpStatus.CREATED);
     }
 
     @PutMapping("/removeChat")

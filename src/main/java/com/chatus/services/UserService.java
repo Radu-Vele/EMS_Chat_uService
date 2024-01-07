@@ -1,12 +1,12 @@
 package com.chatus.services;
 
-import com.chatus.dtos.UserChatDto;
-import com.chatus.dtos.UserCompleteDto;
-import com.chatus.dtos.UserCreateDto;
-import com.chatus.entities.Chat;
-import com.chatus.entities.ChatRoom;
-import com.chatus.entities.GroupChat;
-import com.chatus.entities.User;
+import com.chatus.dtos.chat.ChatWithMessageCreateDto;
+import com.chatus.dtos.message.MessageCompleteDto;
+import com.chatus.dtos.message.MessageSaveInChatDto;
+import com.chatus.dtos.user.UserChatDto;
+import com.chatus.dtos.user.UserCompleteDto;
+import com.chatus.dtos.user.UserCreateDto;
+import com.chatus.entities.*;
 import com.chatus.exceptions.DocumentNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -68,7 +68,7 @@ public class UserService {
         }
         Chat chat = this.chatService.getById(userChatDto.getChatId());
         user.getChats().add(chat);
-        // TODO: verify if I need to call save (probably yes).
+        this.mongoTemplate.save(user);
     }
 
     public void removeChat(UserChatDto userChatDto) throws DocumentNotFoundException {
@@ -88,5 +88,27 @@ public class UserService {
     public void removeChatInternal(User user, GroupChat groupChat) {
         user.getChats().remove(groupChat);
         this.mongoTemplate.save(user);
+    }
+
+    public String addNewChat(ChatWithMessageCreateDto newChatDto, String requesterEmailAddress) throws DocumentNotFoundException {
+        User sender = this.getUserByEmail(requesterEmailAddress)
+                .orElseThrow(DocumentNotFoundException::new);
+        User receiver = this.getUserByEmail(newChatDto.getReceiverEmail())
+                .orElseThrow(DocumentNotFoundException::new);
+        // check if there is already a chat between the two
+        for(ChatRoom chatRoom : sender.getChats()) {
+            if (chatRoom instanceof Chat) {
+                Chat chat = (Chat)chatRoom;
+                if (chat.getEndpoint2().equals(receiver) || chat.getEndpoint1().equals(receiver)) {
+                    System.out.println("Adding message to existing chat");
+                    return this.chatService.addNewMessageInternal(chat, MessageSaveInChatDto.builder()
+                            .body(newChatDto.getBody())
+                            .senderEmail(requesterEmailAddress)
+                            .timestamp(newChatDto.getTimestamp()));
+                }
+            }
+        }
+
+        return this.chatService.createInternal(sender, receiver, newChatDto);
     }
 }

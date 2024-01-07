@@ -2,7 +2,7 @@ package com.chatus.services;
 
 import com.chatus.data.UserPrincipal;
 import com.chatus.data.UserRole;
-import com.chatus.dtos.MessageDto;
+import com.chatus.dtos.message.MessageDto;
 import com.chatus.dtos.SeenNotificationDto;
 import com.chatus.dtos.TypingNotificationDto;
 import com.chatus.exceptions.NoAdminOnlineException;

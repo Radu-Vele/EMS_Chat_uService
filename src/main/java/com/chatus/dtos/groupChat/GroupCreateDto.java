@@ -1,4 +1,4 @@
-package com.chatus.dtos;
+package com.chatus.dtos.groupChat;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

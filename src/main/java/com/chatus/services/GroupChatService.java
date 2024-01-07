@@ -1,7 +1,10 @@
 package com.chatus.services;
 
-import com.chatus.constants.DatabaseConstants;
-import com.chatus.dtos.*;
+import com.chatus.dtos.groupChat.GroupCompleteDto;
+import com.chatus.dtos.groupChat.GroupCreateDto;
+import com.chatus.dtos.groupChat.GroupMemberDto;
+import com.chatus.dtos.message.MessageCompleteDto;
+import com.chatus.dtos.message.MessageSaveInChatDto;
 import com.chatus.entities.GroupChat;
 import com.chatus.entities.Message;
 import com.chatus.entities.User;
@@ -15,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static com.chatus.constants.DatabaseConstants.MAX_MESSAGES_IN_CHAT;

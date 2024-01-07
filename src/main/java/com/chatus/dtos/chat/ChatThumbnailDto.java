@@ -1,4 +1,4 @@
-package com.chatus.dtos;
+package com.chatus.dtos.chat;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
-public class UserCreateDto {
-    String emailAddress;
-    String role;
-    String status;
+public class ChatThumbnailDto {
+    String id;
+    String endpoint1Email;
+    String endpoint2Email;
+    String mostRecentMessageBody;
 }

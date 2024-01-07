@@ -1,4 +1,4 @@
-package com.chatus.dtos;
+package com.chatus.dtos.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
-public class GroupMemberDto {
-    String groupId;
-    String memberEmail;
+public class UserChatDto {
+    String userId;
+    String chatId;
 }

@@ -1,6 +1,5 @@
 package com.chatus.repositories;
 
-import com.chatus.dtos.MessageCompleteDto;
 import com.chatus.entities.Message;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;

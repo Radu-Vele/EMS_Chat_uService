@@ -1,4 +1,4 @@
-package com.chatus.dtos;
+package com.chatus.dtos.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
-public class MessageDto {
-    String senderEmailAddress;
-    String receiverEmailAddress;
-    String messageBody;
-    Long timestamp;
+public class UserCreateDto {
+    String emailAddress;
+    String role;
+    String status;
 }

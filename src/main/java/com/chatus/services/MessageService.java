@@ -1,7 +1,7 @@
 package com.chatus.services;
 
-import com.chatus.dtos.MessageCompleteDto;
-import com.chatus.dtos.MessageSaveDto;
+import com.chatus.dtos.message.MessageCompleteDto;
+import com.chatus.dtos.message.MessageSaveDto;
 import com.chatus.entities.Message;
 import com.chatus.exceptions.DocumentNotFoundException;
 import com.chatus.repositories.MessageRepository;

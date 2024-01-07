@@ -1,6 +1,6 @@
-package com.chatus.dtos;
+package com.chatus.dtos.groupChat;
 
-import com.chatus.entities.Message;
+import com.chatus.dtos.message.MessageCompleteDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
