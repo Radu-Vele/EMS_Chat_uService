@@ -1,6 +1,6 @@
 package com.chatus.services;
 
-import com.chatus.data.User;
+import com.chatus.data.UserPrincipal;
 import com.chatus.data.UserRole;
 import com.chatus.dtos.MessageDto;
 import com.chatus.dtos.SeenNotificationDto;
@@ -41,7 +41,7 @@ public class WebsocketService {
         Random random = new Random();
         List<String> adminList = this.simpUserRegistry.getUsers().stream()
                 .filter(simpUser -> {
-                    User user = (User) simpUser.getPrincipal();
+                    UserPrincipal user = (UserPrincipal) simpUser.getPrincipal();
                     if (user == null) {
                         return false;
                     }

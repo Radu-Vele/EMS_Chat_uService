@@ -19,7 +19,7 @@ public class MessageService {
 
     public String save(MessageSaveDto messageDto) {
         Message message = this.modelMapper.map(messageDto, Message.class);
-        return this.messageRepository.save(message).getId();
+        return this.saveInternal(message).getId();
     }
 
     public MessageCompleteDto getById(String id) throws DocumentNotFoundException {
@@ -57,5 +57,9 @@ public class MessageService {
 
     public void delete(String id) {
         this.messageRepository.deleteById(id);
+    }
+
+    public Message saveInternal(Message newMessage) {
+        return this.messageRepository.insert(newMessage);
     }
 }

@@ -14,16 +14,17 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Document("users")
 public class User {
     @Id
     private String id;
     @Indexed(unique = true)
-    private String emailAddress;
+    private String emailAddress; // TODO: figure out how to ensure uniqueness (not working)
     private String role;
     private String status;
     @DocumentReference
-    private List<Chat> chats;
+    private List<ChatRoom> chats;
 
     public User(String emailAddress) {
         this.emailAddress = emailAddress;

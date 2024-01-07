@@ -1,6 +1,5 @@
 package com.chatus.dtos;
 
-import com.chatus.entities.Message;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,14 +7,15 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+
 @Data
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
-public class GroupCompleteDto {
+public class UserCompleteDto {
     String id;
-    String name;
-    List<String> membersEmails;
-    List<MessageCompleteDto> recentMessages;
+    String emailAddress;
+    String role;
+    String status;
+    List<ChatThumbnailDto> chatThumbnailDtoList;
 }
-

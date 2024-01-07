@@ -16,13 +16,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document("chats")
-public class Chat {
-    @Id
-    private String id;
+public class Chat extends ChatRoom{
     @DocumentReference(lazy = true)
     private User endpoint1;
     @DocumentReference(lazy = true)
     private User endpoint2;
-    @DBRef
-    private List<Message> messages;
 }

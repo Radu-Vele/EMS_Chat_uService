@@ -1,6 +1,6 @@
 package com.chatus.beans;
 
-import com.chatus.data.User;
+import com.chatus.data.UserPrincipal;
 import com.chatus.data.UserRole;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.server.ServerHttpRequest;
@@ -22,8 +22,8 @@ public class WebSocketCustomHandshakeHandler extends DefaultHandshakeHandler {
         String role = httpServletRequest.getParameter("role");
         System.out.println("Received request ".concat(name).concat(" ").concat(role));
         if (role.equalsIgnoreCase("ADMIN")) {
-            return new User(name, UserRole.ADMIN);
+            return new UserPrincipal(name, UserRole.ADMIN);
         }
-        return new User(name, UserRole.USER);
+        return new UserPrincipal(name, UserRole.USER);
     }
 }

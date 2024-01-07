@@ -1,9 +1,6 @@
 package com.chatus.controllers;
 
-import com.chatus.dtos.GroupCompleteDto;
-import com.chatus.dtos.GroupCreateDto;
-import com.chatus.dtos.GroupMemberDto;
-import com.chatus.dtos.GroupMessageDto;
+import com.chatus.dtos.*;
 import com.chatus.exceptions.ActionNotAllowedException;
 import com.chatus.exceptions.DocumentNotFoundException;
 import com.chatus.services.GroupChatService;
@@ -21,9 +18,9 @@ public class GroupChatController {
     private final GroupChatService groupChatService;
     private final JwtUtil jwtUtil;
     @PostMapping("/create")
-    public ResponseEntity<?> createGroup(@RequestHeader(HttpHeaders.AUTHORIZATION) String auth, GroupCreateDto groupCreateDto) {
+    public ResponseEntity<?> createGroup(@RequestHeader(HttpHeaders.AUTHORIZATION) String auth, @RequestBody GroupCreateDto groupCreateDto) throws DocumentNotFoundException {
         String creatorEmailAddress = this.jwtUtil.getUsernameFromBearerTokenAuthHeader(auth);
-        if (!groupCreateDto.getMemberEmails().contains(creatorEmailAddress)) { //make sure the person requesting is in the group
+            if (!groupCreateDto.getMemberEmails().contains(creatorEmailAddress)) { //make sure the person requesting is in the group
             groupCreateDto.getMemberEmails().add(creatorEmailAddress);
         }
         return new ResponseEntity<>(this.groupChatService.create(groupCreateDto), HttpStatus.CREATED);
@@ -50,11 +47,10 @@ public class GroupChatController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/addMessage")
-    public ResponseEntity<?> addMessageToGroup(@RequestHeader(HttpHeaders.AUTHORIZATION) String auth, @RequestBody GroupMessageDto groupMessageDto) throws DocumentNotFoundException, ActionNotAllowedException {
+    @PostMapping    ("/addMessage")
+    public ResponseEntity<?> addMessageToGroup(@RequestHeader(HttpHeaders.AUTHORIZATION) String auth, @RequestBody MessageSaveInChatDto groupMessageDto) throws DocumentNotFoundException, ActionNotAllowedException {
         String requesterEmailAddress = this.jwtUtil.getUsernameFromBearerTokenAuthHeader(auth);
-        this.groupChatService.addMessage(groupMessageDto, requesterEmailAddress);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok(this.groupChatService.createMessageAndAddToGroup(groupMessageDto, requesterEmailAddress));
     }
 
     @PutMapping("/delete")
@@ -63,5 +59,10 @@ public class GroupChatController {
         this.groupChatService.delete(id, requesterEmailAddress);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @GetMapping("/getById")
+    public ResponseEntity<?> getById(@RequestHeader(HttpHeaders.AUTHORIZATION) String auth, @RequestParam String id) throws DocumentNotFoundException, ActionNotAllowedException {
+        String requesterEmailAddress = this.jwtUtil.getUsernameFromBearerTokenAuthHeader(auth);
+        return ResponseEntity.ok(this.groupChatService.getById(id, requesterEmailAddress));
+    }
 }
-git s

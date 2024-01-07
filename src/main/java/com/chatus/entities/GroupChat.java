@@ -16,12 +16,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document("group_chats")
-public class GroupChat {
-    @Id
-    private String id;
+public class GroupChat extends ChatRoom{
     private String name;
     @DocumentReference(lazy = true)
     private List<User> members;
-    @DBRef
-    private List<Message> messages;
 }
