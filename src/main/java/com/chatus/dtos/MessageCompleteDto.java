@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MessageCompleteDto {
     String id;
-    String senderEmailAddress;
+    String senderEmail;
     String body;
     Long timestamp;
     Long seenTimestamp;

@@ -65,4 +65,17 @@ public class GroupChatController {
         String requesterEmailAddress = this.jwtUtil.getUsernameFromBearerTokenAuthHeader(auth);
         return ResponseEntity.ok(this.groupChatService.getById(id, requesterEmailAddress));
     }
+
+    @PutMapping("/editMessage")
+    public ResponseEntity<?> getById(@RequestHeader(HttpHeaders.AUTHORIZATION) String auth, @RequestBody MessageCompleteDto messageCompleteDto) throws DocumentNotFoundException, ActionNotAllowedException {
+        String requesterEmailAddress = this.jwtUtil.getUsernameFromBearerTokenAuthHeader(auth);
+        this.groupChatService.editMessage(messageCompleteDto, requesterEmailAddress);
+        return new ResponseEntity<> (HttpStatus.OK);
+    }
+
+    @GetMapping("/getMessagesBefore")
+    public ResponseEntity<?> getMessagesFromGroupBefore(@RequestHeader(HttpHeaders.AUTHORIZATION) String auth, @RequestParam String chatRoomId, @RequestParam Long timestamp) throws DocumentNotFoundException, ActionNotAllowedException {
+        String requesterEmailAddress = this.jwtUtil.getUsernameFromBearerTokenAuthHeader(auth);
+        return ResponseEntity.ok(this.groupChatService.getMessagesBefore(chatRoomId, timestamp, requesterEmailAddress));
+    }
 }

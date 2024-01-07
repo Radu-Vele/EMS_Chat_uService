@@ -7,9 +7,14 @@ import com.chatus.exceptions.DocumentNotFoundException;
 import com.chatus.repositories.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.net.URI;
+import java.util.List;
+
+import static com.chatus.constants.DatabaseConstants.MESSAGE_BULK_SIZE;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +32,7 @@ public class MessageService {
                 .orElseThrow(DocumentNotFoundException::new);
         return MessageCompleteDto.builder()
                 .id(message.getId())
-                .senderEmailAddress(message.getSenderEmail())
+                .senderEmail(message.getSenderEmail())
                 .body(message.getBody())
                 .timestamp(message.getTimestamp())
                 .seenTimestamp(message.getSeenTimestamp())
@@ -44,15 +49,17 @@ public class MessageService {
         Message messagePrv = this.messageRepository
                 .findById(messageEditDto.getId())
                 .orElseThrow(DocumentNotFoundException::new);
-        // TODO: treat body edit case (mark message as edited)
-        // Modifiable values
-        if (messagePrv.getSeenTimestamp() == null) {
-            messagePrv.setSeenTimestamp(messageEditDto.getSeenTimestamp());
-        }
-        if (messagePrv.getDeliveredTimestamp() == null) {
-            messagePrv.setDeliveredTimestamp(messageEditDto.getDeliveredTimestamp());
-        }
+        this.editInternal(messagePrv, messageEditDto);
         return this.messageRepository.save(messagePrv).getId();
+    }
+
+    public void editInternal(Message previous, MessageCompleteDto messageCompleteDto) {
+        if (previous.getSeenTimestamp() == null) {
+            previous.setSeenTimestamp(messageCompleteDto.getSeenTimestamp());
+        }
+        if (previous.getDeliveredTimestamp() == null) {
+            previous.setDeliveredTimestamp(messageCompleteDto.getDeliveredTimestamp());
+        }
     }
 
     public void delete(String id) {
@@ -61,5 +68,15 @@ public class MessageService {
 
     public Message saveInternal(Message newMessage) {
         return this.messageRepository.insert(newMessage);
+    }
+
+    public List<MessageCompleteDto> getMessagesBefore(String chatRoomId, Long timestamp) {
+        Pageable pageable = PageRequest.of(0,
+                MESSAGE_BULK_SIZE,
+                Sort.by(Sort.Order.desc("timestamp")));
+        List<Message> messages = this.messageRepository.findMessagesFromChatroomSentBefore(chatRoomId, timestamp, pageable);
+        return messages.stream()
+                .map(m -> this.modelMapper.map(m, MessageCompleteDto.class))
+                .toList();
     }
 }

@@ -11,4 +11,5 @@ public class MessageSaveDto {
     String senderEmail;
     String body;
     Long timestamp;
+
 }
