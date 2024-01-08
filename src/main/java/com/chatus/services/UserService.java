@@ -1,5 +1,6 @@
 package com.chatus.services;
 
+import com.chatus.dtos.chat.ChatThumbnailDto;
 import com.chatus.dtos.chat.ChatWithMessageCreateDto;
 import com.chatus.dtos.message.MessageCompleteDto;
 import com.chatus.dtos.message.MessageSaveInChatDto;
@@ -15,6 +16,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,8 +44,29 @@ public class UserService {
         if (user == null) {
             throw new DocumentNotFoundException();
         }
-        return this.modelMapper
+        List<ChatThumbnailDto> chatThumbnailDtoList = new ArrayList<>();
+        for (ChatRoom chatRoom : user.getChats()) {
+            if (chatRoom instanceof Chat chat) {
+                chatThumbnailDtoList.add(ChatThumbnailDto.builder()
+                                .id(chat.getId())
+                                .isGroup(false)
+                                .mostRecentMessageBody(chat.getMessages().get(chat.getMessages().size() - 1).getBody())
+                                .name(chat.getEndpoint2().getEmailAddress()).build());
+            }
+            else if (chatRoom instanceof GroupChat groupChat) {
+                chatThumbnailDtoList.add(ChatThumbnailDto.builder()
+                        .id(groupChat.getId())
+                        .isGroup(true)
+                        .mostRecentMessageBody(groupChat.getMessages().isEmpty()
+                                ? "No messages yet :)"
+                                : groupChat.getMessages().get(groupChat.getMessages().size() - 1).getBody())
+                        .name(groupChat.getName()).build());
+            }
+        }
+        UserCompleteDto userCompleteDto = this.modelMapper
                 .map(user, UserCompleteDto.class);
+        userCompleteDto.setChatThumbnailDtoList(chatThumbnailDtoList);
+        return userCompleteDto;
     }
 
 
@@ -66,7 +90,7 @@ public class UserService {
         if (user == null) {
             throw new DocumentNotFoundException();
         }
-        Chat chat = this.chatService.getById(userChatDto.getChatId());
+        Chat chat = this.chatService.getByIdInternal(userChatDto.getChatId());
         user.getChats().add(chat);
         this.mongoTemplate.save(user);
     }
@@ -76,7 +100,7 @@ public class UserService {
         if (user == null) {
             throw new DocumentNotFoundException();
         }
-        Chat chat = this.chatService.getById(userChatDto.getChatId());
+        Chat chat = this.chatService.getByIdInternal(userChatDto.getChatId());
         user.getChats().add(chat);
     }
 
@@ -97,18 +121,23 @@ public class UserService {
                 .orElseThrow(DocumentNotFoundException::new);
         // check if there is already a chat between the two
         for(ChatRoom chatRoom : sender.getChats()) {
-            if (chatRoom instanceof Chat) {
-                Chat chat = (Chat)chatRoom;
+            if (chatRoom instanceof Chat chat) {
                 if (chat.getEndpoint2().equals(receiver) || chat.getEndpoint1().equals(receiver)) {
                     System.out.println("Adding message to existing chat");
                     return this.chatService.addNewMessageInternal(chat, MessageSaveInChatDto.builder()
                             .body(newChatDto.getBody())
                             .senderEmail(requesterEmailAddress)
-                            .timestamp(newChatDto.getTimestamp()));
+                            .timestamp(newChatDto.getTimestamp())
+                            .build());
                 }
             }
         }
 
-        return this.chatService.createInternal(sender, receiver, newChatDto);
+        Chat createdChat = this.chatService.createInternal(sender, receiver, newChatDto);
+        sender.getChats().add(createdChat);
+        receiver.getChats().add(createdChat);
+        this.mongoTemplate.save(sender);
+        this.mongoTemplate.save(receiver);
+        return createdChat.getId();
     }
 }

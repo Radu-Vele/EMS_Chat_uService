@@ -11,6 +11,7 @@ import com.chatus.entities.User;
 import com.chatus.exceptions.ActionNotAllowedException;
 import com.chatus.exceptions.DocumentNotFoundException;
 import com.chatus.repositories.GroupChatRepository;
+import com.chatus.utils.ChatRoomUtil;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ public class GroupChatService {
     private final UserService userService;
     private final MessageService messageService;
     private final ModelMapper modelMapper;
+    private final ChatRoomUtil chatRoomUtil;
 
     public String create(GroupCreateDto groupCreateDto) throws DocumentNotFoundException {
         GroupChat groupChat = new GroupChat();
@@ -106,15 +108,9 @@ public class GroupChatService {
         newMessage.setId(null);
         newMessage.setChatRoom(groupChat.getId());
         Message messageInDb = this.messageService.saveInternal(newMessage);
-        this.addMessageInternal(messageInDb, groupChat);
-        return messageInDb.getId();
-    }
-    public void addMessageInternal(Message message, GroupChat groupChat) {
-        if (groupChat.getMessages().size() >= MAX_MESSAGES_IN_CHAT) {
-            groupChat.getMessages().remove(0); // pop oldest element
-        }
-        groupChat.getMessages().add(message);
+        this.chatRoomUtil.addMessage(messageInDb, groupChat);
         this.groupChatRepository.save(groupChat);
+        return messageInDb.getId();
     }
 
     public GroupCompleteDto getById(String id, String requesterEmailAddress) throws DocumentNotFoundException, ActionNotAllowedException {

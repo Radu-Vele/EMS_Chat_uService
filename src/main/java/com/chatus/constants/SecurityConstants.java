@@ -16,7 +16,9 @@ public class SecurityConstants {
             "/user/getById",
             "/message/**",
             "/user/edit",
-            "/group/*"
+            "/group/*",
+            "/user/addNewChat",
+            "/chatDb/*"
     };
     public static final String[] ADMIN_AUTH_REQUIRED_PATTERNS = {"/getActiveSessions",
             "/user/delete"

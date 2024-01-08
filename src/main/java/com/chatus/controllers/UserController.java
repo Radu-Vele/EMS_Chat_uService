@@ -47,7 +47,7 @@ public class UserController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/addNewChat")
+    @PostMapping("/addNewChat")
     public ResponseEntity<?> addNewChatToUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String auth,
                                               @RequestBody ChatWithMessageCreateDto newChatDto) throws DocumentNotFoundException {
         String requesterEmailAddress = this.jwtUtil.getUsernameFromBearerTokenAuthHeader(auth);

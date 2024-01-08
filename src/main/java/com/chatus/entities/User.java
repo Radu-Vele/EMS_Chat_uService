@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,8 +24,8 @@ public class User {
     private String emailAddress; // TODO: figure out how to ensure uniqueness (not working)
     private String role;
     private String status;
-    @DocumentReference
-    private List<ChatRoom> chats;
+    @DBRef
+    private List<ChatRoom> chats = new ArrayList<>();
 
     public User(String emailAddress) {
         this.emailAddress = emailAddress;
