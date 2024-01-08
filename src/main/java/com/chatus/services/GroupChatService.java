@@ -129,14 +129,7 @@ public class GroupChatService {
 
     public void editMessage(MessageCompleteDto messageCompleteDto, String requesterEmailAddress) throws DocumentNotFoundException, ActionNotAllowedException {
         GroupChat groupChat = this.retrieveGroupAndCheckMembership(requesterEmailAddress, messageCompleteDto.getChatRoomId());
-        List<Message> messagesEmbedded = groupChat.getMessages();
-        for(int i = 0; i < messagesEmbedded.size(); i++) {
-            if (messagesEmbedded.get(i).getId().equals(messageCompleteDto.getId())) {
-                Message previousMessage = groupChat.getMessages().get(i);
-                this.messageService.editInternal(previousMessage, messageCompleteDto);
-            }
-        }
-        this.messageService.edit(messageCompleteDto);
+        this.chatRoomUtil.editMessageEmbeddedOrNot(messageCompleteDto, groupChat, this.messageService);
         this.groupChatRepository.save(groupChat);
     }
 

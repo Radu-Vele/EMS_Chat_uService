@@ -17,6 +17,9 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Objects;
+
 @Service
 @RequiredArgsConstructor
 public class ChatService {
@@ -98,5 +101,19 @@ public class ChatService {
             throw new ActionNotAllowedException();
         }
         return this.addNewMessageInternal(chat, messageSaveInChatDto);
+    }
+
+    public void editMessage(MessageCompleteDto messageCompleteDto, String requesterEmailAddress) throws ActionNotAllowedException, DocumentNotFoundException {
+        Chat chat = this.checkMembershipAndReturnChat(messageCompleteDto.getChatRoomId(), requesterEmailAddress);
+        if (!requesterEmailAddress.equals(messageCompleteDto.getSenderEmail())) {
+            throw new ActionNotAllowedException();
+        }
+        this.chatRoomUtil.editMessageEmbeddedOrNot(messageCompleteDto, chat, this.messageService);
+        this.mongoTemplate.save(chat);
+    }
+
+    public List<MessageCompleteDto> getMessagesBefore(String chatRoomId, String requesterEmailAddress, Long timestamp) throws DocumentNotFoundException, ActionNotAllowedException {
+        Chat chat = this.checkMembershipAndReturnChat(chatRoomId, requesterEmailAddress);
+        return this.messageService.getMessagesBefore(chatRoomId, timestamp);
     }
 }
