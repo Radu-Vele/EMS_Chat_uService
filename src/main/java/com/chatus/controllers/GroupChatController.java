@@ -57,7 +57,7 @@ public class GroupChatController {
         return ResponseEntity.ok(this.groupChatService.createMessageAndAddToGroup(groupMessageDto, requesterEmailAddress));
     }
 
-    @PutMapping("/delete")
+    @DeleteMapping("/delete")
     public ResponseEntity<?> deleteGroup(@RequestHeader(HttpHeaders.AUTHORIZATION) String auth, String id) throws DocumentNotFoundException, ActionNotAllowedException {
         String requesterEmailAddress = this.jwtUtil.getUsernameFromBearerTokenAuthHeader(auth);
         this.groupChatService.delete(id, requesterEmailAddress);
